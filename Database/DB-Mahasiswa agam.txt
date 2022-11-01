@@ -1,0 +1,205 @@
+CREATE TABLE jurusanKuliah (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kode_jurusan VARCHAR(12),
+	deskripsi VARCHAR(20)
+)
+INSERT INTO jurusanKuliah (
+	kode_jurusan, deskripsi
+)
+VALUES
+('KA001', 'Teknik Informatika'),
+('KA002', 'Management Bisnis'),
+('KA003', 'Ilmu Komunikasi'),
+('KA004', 'Sastra Inggris'),
+('KA005', 'Ilmu Pengetahuan Alam & Matematika'),
+('KA006', 'Kedokteran')
+
+CREATE TABLE dosen (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kode_dosen VARCHAR(50) NOT NULL,
+	nama_dosen VARCHAR(50) NOT NULL,
+	kode_matakuliah VARCHAR(50) NOT NULL,
+	kode_fakultas VARCHAR(50) NOT NULL
+)
+INSERT INTO dosen (
+	kode_dosen, nama_dosen, kode_matakuliah, kode_fakultas
+)
+VALUES
+('GK001', 'Ahmad Prasetyo', 'KPK001', 'TK002'),
+('GK002', 'Hadi Fuladi', 'KPK002', 'TK001'),
+('GK003', 'Johan Goerge', 'KPK003', 'TK002'),
+('GK004', 'Bima Darmawan', 'KPK004', 'TK002'),
+('GK005', 'Gatot Wahyudi', 'KPK005', 'TK001')
+
+CREATE TABLE mataKuliah (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kode_matakuliah VARCHAR(50) NOT NULL,
+	nama_matakuliah VARCHAR(50) NOT NULL,
+	keaktifan_status VARCHAR(50) NOT NULL
+)
+INSERT INTO mataKuliah (
+	kode_matakuliah, nama_matakuliah, keaktifan_status
+)
+VALUES
+('KPK001', 'Algoritma Dasar', 'Aktif'),
+('KPK002', 'Basis Data', 'Aktif'),
+('KPK003', 'Kalkulus', 'Aktif'),
+('KPK004', 'Pengantar Bisnis', 'Aktif'),
+('KPK005', 'Matematika Ekonomi & Bisnis', 'Non Aktif')
+
+CREATE TABLE mahasiswa (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kode_mahasiswa VARCHAR(50) NOT NULL,
+	nama_mahasiswa VARCHAR(50) NOT NULL,
+	alamat_mahasiswa VARCHAR(50) NOT NULL,
+	kode_jurusan VARCHAR(50) NOT NULL,
+	kode_matakuliah VARCHAR(50) NOT NULL
+)
+
+INSERT INTO mahasiswa (
+	kode_mahasiswa, nama_mahasiswa, alamat_mahasiswa, kode_jurusan, kode_matakuliah
+)
+VALUES
+('MK001', 'Rhony Iskandar', 'Jl. Hati besar no 63 RT.13', 'KA001', 'KPK001'),
+('MK002', 'Fullana Binharjo', 'Jl. Biak kebagusan No. 34', 'KA002', 'KPK002'),
+('MK003', 'Sardine Himura', 'Jl. Kebajian no 84', 'KA001', 'KPK003'),
+('MK004', 'Isani Isabul', 'Jl. Merak merpati No.78', 'KA001', 'KPK001'),
+('MK005', 'Charlie Birawa', 'Jl. Air terjun semidi No.56', 'KA003', 'KPK002')
+
+CREATE TABLE nilaiMahasiswa (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kode_nilai VARCHAR(50) NOT NULL,
+	kode_mahasiswa VARCHAR(50) NOT NULL,
+	kode_organisasi VARCHAR(50) NOT NULL,
+	nilai INT NOT NULL
+)
+
+INSERT INTO nilaiMahasiswa (
+	kode_nilai, kode_mahasiswa, kode_organisasi, nilai
+)
+VALUES
+('SK001', 'MK004', 'KK001', 90),
+('SK002', 'MK001', 'KK001', 80),
+('SK003', 'MK002', 'KK003', 85),
+('SK004', 'MK004', 'KK002', 95),
+('SK005', 'MK005', 'KK005', 70)
+
+
+CREATE TABLE fakultas (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kode_fakultas VARCHAR(50) NOT NULL,
+	penjelasan VARCHAR(50) NOT NULL
+)
+
+INSERT INTO fakultas (
+	kode_fakultas, penjelasan
+)
+VALUES
+('TK001', 'Teknik Informatika'),
+('TK002', 'Matematika'),
+('TK003', 'Sistem Informatika')
+
+CREATE TABLE organisasi (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kode_organisasi VARCHAR(50) NOT NULL,
+	nama_organisasi VARCHAR(50) NOT NULL,
+	status_organisasi VARCHAR(50) NOT NULL
+)
+INSERT INTO organisasi (
+	kode_organisasi, nama_organisasi, status_organisasi
+)
+VALUES
+('KK001', 'Unit Kegiatan Mahasiswa (UKM)', 'Aktif'),
+('KK002', 'Badan Eksekutif Mahasiswa Fakultas (BEMF)', 'Aktif'),
+('KK003', 'Dewan Perwakilan Mahasiswa Universitas (DPMU)', 'Aktif'),
+('KK004', 'Badan Eksekutif Mahasiswa Universitas (BEMU)', 'Non Aktif'),
+('KK005', 'Himpunan Mahasiswa Jurusan', 'Non Aktif'),
+('KK006', 'Himpunan Kompetisi Jurusan', 'Aktif')
+
+
+--no 2--
+ALTER TABLE dosen
+ALTER COLUMN nama_dosen TYPE VARCHAR(200)
+
+
+--no 3--
+SELECT m.kode_mahasiswa, m.nama_mahasiswa, mk.nama_matakuliah, jk.deskripsi
+FROM mahasiswa m
+JOIN jurusankuliah jk
+ON m.kode_jurusan = jk.kode_jurusan
+JOIN matakuliah mk
+ON mk.kode_matakuliah = m.kode_matakuliah
+WHERE m.kode_mahasiswa = 'MK001'
+
+
+--no 4--
+SELECT mk.nama_matakuliah, mk.keaktifan_status, m.kode_mahasiswa, m.nama_mahasiswa, m.alamat_mahasiswa, m.kode_jurusan, m.kode_matakuliah
+FROM mahasiswa m
+RIGHT JOIN matakuliah mk
+ON mk.kode_matakuliah = m.kode_matakuliah
+WHERE mk.keaktifan_status = 'Non Aktif'
+
+
+--no 5--
+SELECT DISTINCT m.kode_mahasiswa, m.nama_mahasiswa, m.alamat_mahasiswa
+FROM mahasiswa m
+JOIN nilaimahasiswa nm
+ON m.kode_mahasiswa = nm.kode_mahasiswa 
+JOIN organisasi o
+ON o.kode_organisasi = nm.kode_organisasi
+WHERE o.status_organisasi = 'Aktif'
+AND nm.nilai > 79
+
+--no 6--
+SELECT kode_matakuliah, nama_matakuliah, keaktifan_status
+FROM matakuliah
+WHERE keaktifan_status
+LIKE '%n%'
+
+--no 7--
+SELECT m.nama_mahasiswa, COUNT(nm.kode_mahasiswa) AS jmlah_organisasi
+FROM mahasiswa m
+JOIN nilaimahasiswa nm
+ON nm.kode_mahasiswa = m.kode_mahasiswa
+GROUP BY m.nama_mahasiswa
+HAVING COUNT(nm.kode_mahasiswa) > 1
+
+
+--no 8--
+SELECT m.kode_mahasiswa, m.nama_mahasiswa, mk.nama_matakuliah, jk.deskripsi AS jurusan, d.nama_dosen, mk.keaktifan_status, f.penjelasan AS fakultas 
+FROM mahasiswa m
+JOIN matakuliah mk
+ON m.kode_matakuliah = mk.kode_matakuliah
+JOIN jurusankuliah jk
+ON jk.kode_jurusan = m.kode_jurusan
+JOIN dosen d
+ON d.kode_matakuliah = m.kode_matakuliah
+JOIN fakultas f
+ON f.kode_fakultas = d.kode_fakultas
+WHERE m.kode_mahasiswa = 'MK001'
+
+--no 9--
+CREATE VIEW viewmahasiswa AS 
+SELECT m.kode_mahasiswa, m.nama_mahasiswa, mk.nama_matakuliah, d.nama_dosen, mk.keaktifan_status, f.penjelasan AS fakultas
+FROM mahasiswa m
+JOIN matakuliah mk
+ON m.kode_matakuliah = mk.kode_matakuliah
+JOIN dosen d
+ON d.kode_matakuliah = m.kode_matakuliah
+JOIN fakultas f
+ON f.kode_fakultas = d.kode_fakultas
+ORDER BY m.kode_mahasiswa
+
+--no 10--
+SELECT *
+FROM viewmahasiswa
+WHERE kode_mahasiswa = 'MK001'
+
+--no 11--
+CREATE INDEX index_kode_mahasiswa
+ON mahasiswa(kode_mahasiswa)
+
+--no 12--
+ALTER TABLE nilaimahasiswa
+ADD UNIQUE (kode_nilai)
+

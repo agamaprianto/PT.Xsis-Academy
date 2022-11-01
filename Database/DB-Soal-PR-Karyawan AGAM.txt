@@ -1,0 +1,106 @@
+CREATE TABLE karyawan (
+	id BIGINT PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY,
+	nomor_induk varchar(7) NOT NULL,
+  	nama varchar(30) NOT NULL,
+  	alamat text NOT NULL,	
+  	tgl_lahir date NOT NULL,
+  	tgl_masuk date NOT NULL,
+  	UNIQUE (nomor_induk)
+)
+
+INSERT INTO karyawan (
+	nomor_induk, nama, alamat, tgl_lahir, tgl_masuk
+)
+VALUES
+('IP06001', 'Agus', 'Jln. Gajah Mada 115A, Jakarta Pusat', '08/01/1970', '07/07/2006'),
+('IP06002', 'Amin', 'Jln. Bungur sari v No, 178, bandung', '5/3/1977', '7/6/2006'),
+('IP06003', 'Yusuf', 'Jln. Yosodpuro 15, surabaya', '8/9/1973', '7/8/2006'),
+('IP07004', 'Alyssa', 'Jln. Cendana No. 6 Bandung', '2/12/1983', '1/5/2007'),
+('IP07005', 'Maulana', 'Jln. Ampera Raya No 1', '10/10/1985', '2/5/2007'),
+('IP07006', 'Afika', 'Jln. Pejaten Barat No 6A', '3/9/1987', '6/9/2007'),
+('IP07007', 'James', 'Jln. Padjadjaran No. 111, bandung', '5/12/1988', '6/9/2006'),
+('IP06008', 'Octavanus', 'Jln. Gajah Mada 101. Semarang', '10/7/1988', '8/8/2008'),
+('IP09009', 'Nugroho', 'Jln. Duren Tiga 196, Jakarta selatan', '1/12/1988', '11/11/2008'),
+('IP09010', 'Raisa', 'Jln. Nangka Jakarta selatan', '12/12/1989', '2/9/2009')
+
+SELECT *
+FROM karyawan
+
+
+CREATE TABLE cuti_karyawan (
+	id BIGINT PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY,
+  	nomor_induk varchar(7) NOT NULL,
+  	tgl_mulai date NOT NULL,
+  	lama_cuti int NOT NULL,
+  	keterangan text NOT NULL
+)
+
+INSERT INTO cuti_karyawan (
+	nomor_induk, tgl_mulai, lama_cuti, keterangan
+)
+VALUES
+('IP06001', '02/01/2012', '3', 'Acara keluar'),
+('IP06001', '13/02/2012', '4', 'Acara sakit'),
+('IP07007', '15/02/2012', '2', 'Nenek sakit'),
+('IP06003', '17/02/2012', '1', 'Mendaftar sekolah anak'),
+('IP07006', '20/02/2012', '5', 'Menikah'),
+('IP07004', '27/02/2012', '1', 'Imunisasi anak')
+
+--no 1--
+SELECT *
+FROM karyawan
+ORDER BY tgl_masuk ASC
+LIMIT 3
+
+--NO 2--
+SELECT k.nomor_induk, k.nama, c.tgl_mulai, c.lama_cuti, c.keterangan
+FROM karyawan k
+INNER JOIN cuti_karyawan c
+ON k.nomor_induk = c.nomor_induk
+
+--no 2 mas arya--
+SELECT k.nomor_induk, k.nama, c.tgl_mulai, c.lama_cuti, c.keterangan
+FROM karyawan k
+INNER JOIN cuti_karyawan c
+ON k.nomor_induk = c.nomor_induk
+WHERE date '2012-02-16'
+BETWEEN c.tgl_mulai
+AND c.tgl_mulai + c.lama_cuti
+
+--No 3--
+SELECT k.nomor_induk, k.nama, c.lama_cuti
+FROM karyawan k
+INNER JOIN cuti_karyawan c
+ON k.nomor_induk = c.nomor_induk
+WHERE c.lama_cuti > 1
+
+--no 3 tarang--
+SELECT k.nomor_induk, k.nama, COUNT(c.nomor_induk)
+FROM karyawan k
+INNER JOIN cuti_karyawan c
+ON k.nomor_induk = c.nomor_induk
+GROUP BY k.nomor_induk, k.nama
+HAVING COUNT(c.nomor_induk)>1
+
+--NO 4--
+SELECT c.nomor_induk, k.nama AS sisa_cuti
+FROM karyawan k
+INNER JOIN cuti_karyawan c
+ON k.nomor_induk = c.nomor_induk
+WHERE c.lama_cuti - 12
+
+--no 4 tarang--
+SELECT k.nomor_induk, k.nama, 12-COALESCE(SUM(c.lama_cuti),0) AS sisa_cuti
+FROM karyawan k
+LEFT JOIN cuti_karyawan c
+ON k.nomor_induk = c.nomor_induk
+GROUP BY k.nomor_induk, k.nama
+ORDER BY sisa_cuti
+
+--NO 5--
+SELECT CONCAT(nama,' ', nomor_induk) AS no_induk_nama
+FROM karyawan
+ORDER BY no_induk_nama ASC
+
+
+

@@ -1,0 +1,231 @@
+--membuat tabel di database
+CREATE TABLE person (
+	id BIGINT PRIMARY KEY NOT NULL,
+	frist_name VARCHAR(50) NOT NULL,
+	last_name VARCHAR(50) NOT NULL,
+	gender VARCHAR(7) NOT NULL,
+	date_of_birth DATE NOT NULL,
+	email VARCHAR(150)
+)
+--menghapus tabel
+DROP TABLE person
+
+--memasukan isi dalam database
+INSERT INTO person (
+	first_name, last_name, 
+	gender, date_of_birth, email
+)
+VALUES ('Yhudi', 'Cornelius', 'MALE', 
+		date '1999, 04, 30', 'yhudi@tampan.com'	   
+), ('Satria', 'Ramadhan', 'MALE', 
+		date '1998, 12, 21', 'satria@tampan.com'
+), ('Andrew', 'Ishak', 'MALE', 
+		date '1999, 06, 06', 'ibe@gmail.com'
+), ('Thailtha', 'Ulimazzahra', 'FEMALE', 
+		date '2001, 06, 06', 'thalitha@gmail.com'
+), ('Rizky', 'Thoriq', 'MALE', 
+		date '1996, 07, 07', 'thariq@gmail.com'
+), ('Agam', 'Aprianto', 'MALE', 
+		date '1997, 04, 04', 'agam@gmail.com'
+), ('Rama', 'Ilhami', 'MALE', 
+		date '1998, 12, 15', 'rama@gmail.com'
+), ('Herlanda', 'Tarang', 'MALE', 
+		date '1999, 06, 17', 'tarang@gmail.com'
+)
+
+INSERT INTO person (
+	first_name, last_name, gender, date_of_birth,
+	email
+)
+VALUES (
+	'Denis', 'Arya', 'MALE',
+	date '1996, 04, 02','denis@gmail.com'
+)
+
+--merubah nama kolom
+ALTER TABLE person RENAME COLUMN frist_name TO first_name; 
+
+--menampilkan isi tabel person
+SELECT * FROM person
+
+--menghapus isi dari database di tabel person
+DELETE FROM person WHERE first_name = 'Denis'
+
+--merubah isi data yang sudah ada
+UPDATE person
+SET city = 'cianjur'
+WHERE first_name = 'Yhudi'
+
+UPDATE person
+SET city = 'jakarta barat'
+WHERE id = 6
+
+UPDATE person
+SET city = 'tangerang'
+WHERE id = 5
+
+
+--ALTER TABLE
+ALTER TABLE person
+ADD city VARCHAR(50)
+
+ALTER TABLE person
+ADD score INT
+
+--sorting nama
+SELECT *
+FROM person
+ORDER BY first_name DESC
+
+--untuk menghilangkan duplikat
+SELECT DISTINCT gender 
+FROM person
+
+
+--WHERE CLAUSE
+
+SELECT *
+FROM person
+WHERE gender = 'MALE'
+ORDER BY first_name
+
+--menampilkan isi dari tabel person
+--yang tingal di jkt atau di tgr
+SELECT *
+FROM person
+WHERE city = 'Jakarta'
+OR city = 'Tangerang'
+
+--menampilkan isi dari tabel person
+--yang gender male dan tinggal di jkt & tgr
+SELECT *
+FROM person
+WHERE gender = 'MALE'
+AND city = 'Jakarta'
+OR city = 'Tangerang'
+
+--menampilkan isi dari tabel person
+--yang tingal di jkt & tgr
+--dan menampilkan gender male
+--lalu sorting dari asc
+SELECT *
+FROM person
+WHERE city IN ('Jakarta', 'Tangerang')
+AND gender = 'MALE'
+ORDER BY first_name
+
+--operator lebih
+SELECT *
+FROM person
+WHERE id >= 6
+
+--LIMIT
+SELECT *
+FROM person
+WHERE score >= 0
+ORDER BY score DESC
+LIMIT 3
+
+--LIMIT OFFSET
+--nampilin nilai yang selain 3 terbesar
+SELECT *
+FROM person
+WHERE score >= 0
+ORDER BY score DESC
+OFFSET 3
+
+
+--BETWEEN
+SELECT *
+FROM person
+WHERE date_of_birth
+BETWEEN date '1997-01-01'
+AND '1998-12-31'
+
+--LIKE
+--menampilkan nama yang berawal huruf A
+SELECT *
+FROM person
+WHERE first_name LIKE 'A%'
+
+SELECT *
+FROM person
+WHERE first_name LIKE '%a'
+
+SELECT *
+FROM person
+WHERE email LIKE '%gmail%'
+
+SELECT *
+FROM person
+WHERE first_name LIKE '_a%'
+
+--GROUP BY--
+--menampilkan fungsi count,avg,max,min,sum,agregat
+SELECT city, COUNT (city)
+FROM person
+GROUP BY city
+ORDER BY COUNT (city) DESC
+
+--having count untuk memfilter hasil query
+SELECT city, COUNT (city)
+FROM person
+GROUP BY city
+HAVING COUNT (city) > 1
+
+SELECT city, COUNT (city) AS "jumlah_orang"
+FROM person
+GROUP BY city
+HAVING COUNT (city) = (SELECT MAX(jmlh_orang) AS "max_jmlh_orang"
+					  	FROM (SELECT COUNT(city) AS "jmlh_orang"
+							 FROM person GROUP BY city
+							 )AS "max_jmlh_penduduk")
+							 
+							 
+--basic aritmatic
+SELECT 10 - 2 AS "pengurangan"
+
+CREATE TABLE car (
+	id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+	merk VARCHAR(50) NOT NULL,
+	model VARCHAR(50) NOT NULL,
+	plate VARCHAR(15) NOT NULL,
+	price NUMERIC(10, 2) NOT NULL
+)
+
+INSERT INTO car (
+	merk, model, plate, price
+)
+VALUES (
+	'Tesla', 'Model S', 'F 123 YUD', 20000.00
+), (
+	'Toyota', 'Kijang', 'B 290 CBU', 10000.00
+), (
+	'Toyota', 'Alphard', 'B 20 BUF', 15000.00
+), (
+	'Ferari', 'F8', 'AD 1 IBE', 40000.00
+), (
+	'Honda', 'Jazz', 'B 547 RIA', 15000.00
+), (
+	'Nissan', 'GT-R', 'D 317 NIS', 35000.00
+), (
+	'Toyota', 'Fortuner', 'B 789 HER', 45000.00
+), (
+	'MiniCooper', 'R61', 'T 4 LIT', 45000.00
+), (
+	'Rubicon', 'Wrangler', 'T 4 RIQ', 55000.00
+)
+
+SELECT *
+FROM person
+
+ALTER TABLE person
+ADD car_id INT
+
+
+SELECT
+FROM
+INNER JOIN
+ON
+
+

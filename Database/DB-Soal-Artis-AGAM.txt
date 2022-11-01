@@ -1,0 +1,239 @@
+CREATE TABLE public.artis (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kd_artis VARCHAR(100) NOT NULL,
+  	nama_artis VARCHAR(100) NOT NULL,
+  	kelamin VARCHAR(100) NOT NULL,	
+  	bayaran INT NOT NULL,
+  	award INT NOT NULL,
+	negara varchar(100) NOT NULL,
+  	PRIMARY KEY(id, kd_artis)
+)
+INSERT INTO public.artis (
+	kd_artis, nama_artis, kelamin, bayaran, award, negara
+)
+VALUES
+('A001', 'ROBERT DOWNEY JR', 'PRIA', 1000000000, '2', 'AS'),
+('A002', 'ANGELINA JOLIE', 'WANITA', 700000000, '1', 'AS'),
+('A003', 'JACKIE CHAN', 'PRIA', 200000000, '7', 'HK'),
+('A004', 'JOE TASLIM', 'PRIA', 350000000, '1', 'ID'),
+('A005', 'CHELSEA ISLAN', 'WANITA', 300000000, '0', 'ID')
+
+CREATE TABLE public.negara (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kd_negara VARCHAR(100) NOT NULL,
+  	nama_negara VARCHAR(100) NOT NULL,
+	PRIMARY KEY(id, kd_negara)
+)
+INSERT INTO public.negara (
+	kd_negara, nama_negara
+)
+VALUES
+('AS', 'AMERIKA SERIKAT'),
+('HK', 'HONGKONG'),
+('ID', 'INDONESIA'),
+('IN', 'INDIA')
+
+CREATE TABLE public.genre (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kd_genre VARCHAR(50) NOT NULL,
+	nama_genre VARCHAR(50) NOT NULL,
+	PRIMARY KEY(id, kd_genre)
+)
+INSERT INTO public.genre (
+	kd_genre, nama_genre
+)
+VALUES
+('G001', 'ACTION'),
+('G002', 'HORROR'),
+('G003', 'COMEDY'),
+('G004', 'DRAMA'),
+('G005', 'THRILLER'),
+('G006', 'FICTION')
+
+CREATE TABLE public.produser (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kd_produser VARCHAR(50) NOT NULL,
+	nama_produser VARCHAR(50) NOT NULL,
+	international VARCHAR(50) NOT NULL,
+	PRIMARY KEY(id, kd_produser)
+)
+INSERT INTO public.produser (
+	kd_produser, nama_produser, international
+)
+VALUES
+('PD01', 'MARVEL', 'YA'),
+('PD02', 'HONGKONG CINEMA', 'YA'),
+('PD03', 'RAPI FILM', 'TIDAK'),
+('PD04', 'PARKIT', 'TIDAK'),
+('PD05', 'PARAMOUNT PICTURE', 'YA')
+
+CREATE TABLE public.film (
+	id BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+	kd_film VARCHAR(10) NOT NULL,
+	nama_film VARCHAR(55) NOT NULL,
+	genre VARCHAR(55) NOT NULL,
+	artis VARCHAR(55) NOT NULL,
+	produser VARCHAR(55) NOT NULL,
+	pendapatan INT NOT NULL,
+	nominasi INT NOT NULL,
+	PRIMARY KEY(id, kd_film)
+)
+INSERT INTO public.film (
+	kd_film, nama_film, genre, artis, produser, pendapatan, nominasi
+)
+VALUES
+('F001', 'IRON MAN', 'G001', 'A001', 'PD01', 2000000000, 3)
+('F002', 'IRON MAN 2', 'G001', 'A001', 'PD01', 1800000000, 2),
+('F003', 'IRON MAN 3', 'G001', 'A001', 'PD01', 1200000000, 0),
+('F004', 'AVENGER CIVIL WAR', 'G001', 'A001', 'PD01', 2000000000, 1),
+('F005', 'SPIDERMAN HOME COMING', 'G001', 'A001', 'PD01', 1300000000, 0),
+('F006', 'THE RAID', 'G001', 'A004', 'PD03', 800000000, 5),
+('F007', 'FAST & FURIOUS', 'G001', 'A004', 'PD05', 830000000, 2),
+('F008', 'HABIBIE AINUN', 'G004', 'A005', 'PD03', 670000000, 4),
+('F009', 'POLICE STORY', 'G001', 'A003', 'PD02', 700000000, 3),
+('F010', 'POLICE STORY 2', 'G001', 'A003', 'PD02', 710000000, 1),
+('F011', 'POLICE STORY 3', 'G001', 'A003', 'PD02', 615000000, 0),
+('F012', 'RUSH HOUR', 'G003', 'A003', 'PD05', 695000000, 2),
+('F013', 'KUNGFU PANDA', 'G003', 'A003', 'PD05', 923000000, 5)
+
+
+--NO 1--
+SELECT nama_film, nominasi 
+FROM public.film 
+ORDER BY nominasi DESC
+
+--NO 2--
+SELECT nama_film, nominasi 
+FROM film 
+WHERE nominasi = (SELECT MAX(nominasi) FROM film)
+
+--NO 3--
+SELECT nama_film, nominasi 
+FROM film 
+WHERE nominasi = 0
+
+--NO 4--
+SELECT nama_film, pendapatan 
+FROM film 
+ORDER BY pendapatan ASC
+
+--NO 5--
+SELECT nama_film, pendapatan 
+FROM film 
+WHERE pendapatan = (SELECT MAX(pendapatan) FROM film)
+
+--NO 6--
+SELECT nama_film 
+FROM film 
+WHERE nama_film 
+LIKE 'P%'
+
+--NO 7--
+SELECT nama_film 
+FROM film 
+WHERE nama_film 
+LIKE '%H'
+
+--NO 8--
+SELECT nama_film 
+FROM film 
+WHERE nama_film 
+LIKE '%D%'
+
+--NO 9--
+SELECT nama_film, pendapatan 
+FROM film 
+WHERE pendapatan =(SELECT MAX(pendapatan) FROM film) 
+AND nama_film 
+LIKE '%O%'
+
+--NO 10--
+SELECT nama_film, pendapatan 
+FROM film 
+WHERE pendapatan =(SELECT MIN(pendapatan) FROM film) 
+AND nama_film 
+LIKE '%O%'
+
+--NO 11--
+SELECT film.nama_film, artis.nama_artis 
+FROM film 
+LEFT JOIN artis 
+ON film.artis = artis.kd_artis
+
+--NO 12--
+SELECT film.nama_film 
+FROM film
+LEFT JOIN artis 
+ON film.artis = artis.kd_artis
+LEFT JOIN negara 
+ON artis.negara = negara.kd_negara
+WHERE artis.negara = 'HK'
+
+--NO 13--
+SELECT film.nama_film 
+FROM film
+LEFT JOIN artis 
+ON film.artis = artis.kd_artis
+LEFT JOIN negara 
+ON artis.negara = negara.kd_negara
+WHERE kd_negara 
+NOT LIKE '%O%'
+
+--NO 14--
+SELECT artis.nama_artis 
+FROM film
+RIGHT JOIN artis 
+ON film.artis = artis.kd_artis
+WHERE film.nama_film ISNULL
+
+--NO 15--
+SELECT artis.nama_artis 
+FROM film
+LEFT JOIN artis 
+ON film.artis = artis.kd_artis
+LEFT JOIN genre 
+ON film.genre = genre.kd_genre
+WHERE genre.nama_genre = 'DRAMA'
+
+--NO 16--
+SELECT artis.nama_artis 
+FROM film
+JOIN artis 
+ON film.artis = artis.kd_artis
+JOIN genre 
+ON film.genre = genre.kd_genre
+WHERE genre.nama_genre = 'HORROR'
+
+--NO 17--
+SELECT negara.nama_negara, COUNT(negara.nama_negara) 
+FROM film
+LEFT JOIN artis 
+ON film.artis = artis.kd_artis
+LEFT JOIN negara 
+ON artis.negara = negara.kd_negara
+GROUP BY negara.nama_negara
+
+--NO 18--
+SELECT nama_produser 
+FROM produser
+WHERE international = 'YA'
+
+--NO 19--
+SELECT produser.nama_produser, COUNT(film.nama_film)
+FROM film
+LEFT JOIN produser 
+ON film.produser = produser.kd_produser
+GROUP BY produser.nama_produser
+
+--NO 20--
+SELECT produser.nama_produser, SUM(film.pendapatan) 
+FROM film
+LEFT JOIN produser 
+ON film.produser = produser.kd_produser
+WHERE produser.nama_produser = 'MARVEL'
+GROUP BY produser.nama_produser
+
+
+
+
+

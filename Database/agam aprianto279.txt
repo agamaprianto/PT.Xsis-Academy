@@ -1,0 +1,155 @@
+CREATE TABLE tblPengarang (
+	id BIGINT PRIMARY KEY NOT NULL,
+	Kd_Pengarang VARCHAR(7) NOT NULL,
+	Nama VARCHAR(30) NOT NULL,
+	Alamat VARCHAR(80) NOT NULL,
+	Kota VARCHAR(15) NOT NULL,
+	Kelamin VARCHAR(1) NOT NULL
+)
+
+INSERT INTO tblPengarang (
+	Kd_Pengarang, Nama, Alamat, Kota, Kelamin
+)
+VALUES 
+('P0001', 'Ashadi', 'Jl.Beo 25', 'Yogya', 'P'),
+('P0002', 'Rian', 'Jl.Solo 123', 'Yogya', 'P'),
+('P0003', 'Suwadi', 'Jl.Semangka 13', 'Bandung', 'P'),
+('P0004', 'Siti', 'Jl.Durian 15', 'Solo', 'W'),
+('P0005', 'Amir', 'Jl.Gajah 33', 'Kudus', 'P'),
+('P0006', 'Suparman', 'Jl.Harimau 25', 'Jakarta', 'P'),
+('P0007', 'Jaja', 'Jl.Singa 7', 'Bandung', 'P'),
+('P0008', 'Saman', 'Jl.Naga 12', 'Yogya', 'P'),
+('P0009', 'Anwar', 'Jl.Tidar 6A', 'Magelang', 'P'),
+('P0010', 'Fatmawati', 'Jl.Renjana 4', 'Bogor', 'W')
+
+CREATE TABLE tblGaji (
+	id BIGINT PRIMARY KEY NOT NULL,
+	Kd_Pengarang VARCHAR(7) NOT NULL,
+	Nama VARCHAR(30) NOT NULL,
+	Gaji DECIMAL(18, 4) NOT NULL
+)
+
+INSERT INTO tblGaji(
+	Kd_Pengarang, Nama, Gaji
+)
+VALUES
+('P0002','Rian',600.000),
+('P0005','Amir',700.000),
+('P0004','Siti',500.000),
+('P0003','Suwadi',1000.000),
+('P0010','Fatmawati',600.000),
+('P0008','Saman',750.000)
+
+SELECT *
+FROM tblGaji
+
+SELECT *
+FROM tblPengarang
+
+--NO 1--
+SELECT Nama, COUNT(Nama) AS "jmlah_pengarang"
+FROM tblPengarang
+GROUP BY Nama
+
+--NO 2--
+SELECT COUNT(*) AS "jmlh_kelamin"
+FROM tblPengarang
+WHERE Kelamin='W'
+OR Kelamin ='P'
+
+--NO 3 --
+SELECT DISTINCT Kota
+FROM tblPengarang 
+
+--NO 4--
+SELECT Kota
+FROM tblPengarang
+OFFSET 1
+
+--NO 5--
+SELECT MAX(Kd_Pengarang), MIN (Kd_Pengarang) 
+FROM tblPengarang
+
+--NO 6--
+SELECT MAX(Gaji), MIN (Gaji)
+FROM tblGaji
+
+--NO 7--
+SELECT Gaji
+FROM tblGaji
+WHERE Gaji > 600.000
+
+--NO 8--
+SELECT SUM(Gaji) AS total_gaji 
+FROM tblGaji
+
+--No 9--
+SELECT SUM(Gaji) AS total_gaji 
+FROM tblGaji
+INNER JOIN tblPengarang
+ON tblPengarang = 'Gaji'
+
+--NO 10--
+SELECT Kd_pengarang
+FROM tblPengarang
+LIMIT 6
+
+--NO 11--
+SELECT *
+FROM tblPengarang
+WHERE Kota IN ('Yogya', 'Solo', 'Magelang')
+
+--No 12--
+SELECT * 
+FROM tblPengarang 
+WHERE Kota <> 'Yogya'
+
+--NO 13a--
+SELECT *
+FROM tblPengarang
+WHERE Nama 
+LIKE 'A%'
+--No 13b--
+SELECT *
+FROM tblPengarang
+WHERE Nama 
+LIKE '%i'
+--No 13c--
+SELECT *
+FROM tblPengarang
+WHERE Nama 
+LIKE '__a%'
+--No 13d--
+SELECT *
+FROM tblPengarang
+WHERE Nama 
+NOT LIKE '%n'
+
+--No 14--
+SELECT tblPengarang.Kd_pengarang, tblGaji.Kd_pengarang
+FROM tblPengarang
+INNER JOIN tblGaji
+ON tblPengarang.Kd_pengarang = tblGaji.Kd_pengarang
+
+--NO 15--
+SELECT tblGaji.Gaji, tblPengarang.Kota
+FROM tblGaji, tblPengarang
+WHERE Gaji < 1000.000
+
+--No 16--
+ALTER TABLE tblPengarang MODIFY Kelamin VARCHAR(10) NOT NULL
+
+--NO 17--
+ALTER TABLE tblPengarang
+ADD Gelar VARCHAR(12)
+
+--NO 18--
+UPDATE tblPengarang
+SET Alamat = 'Jl.Cendrawasih 65', Kota = 'Pekanbaru'
+WHERE Nama = 'Rian'
+
+--19--
+CREATE VIEW vwPengarang AS 
+SELECT Kd_pengarang, Nama, Kota 
+FROM tblPengarang 
+

@@ -1,0 +1,254 @@
+-- cara membuat table di database
+CREATE TABLE person (
+	id BIGINT PRIMARY KEY NOT NULL,
+	first_name VARCHAR(50) NOT NULL,
+	last_name VARCHAR(50) NOT NULL,
+	gender VARCHAR(7) NOT NULL,
+	date_of_birth DATE NOT NULL,
+	email VARCHAR(150)
+)
+
+-- menghapus table
+DROP TABLE person
+
+INSERT INTO person (
+	first_name, last_name, gender,
+	date_of_birth, email
+)
+VALUES ('Yhudi', 'Cornelius', 'MALE',
+		date '1999, 04, 30', 'yhudi@tampan.com'
+),('Satria', 'Ramadhan', 'MALE',
+		date '1998, 12, 21', 'satria@tampan.com'
+),('Andrew', 'Ishak', 'MALE',
+		date '1999, 06, 06', 'ibe@gmail.com'
+),('Talitha', 'Ulimazzahra', 'FEMALE',
+		date '2001, 05, 12', 'talitha@gmail.com'
+),('Rizky', 'Thariq', 'MALE',
+		date '1996, 07, 07', 'thariq@gmail.com'
+),('Agam', 'Aprianto', 'MALE',
+		date '1997, 04, 04', 'agam@gmail.com'
+),('Rama', 'Ilhami', 'MALE',
+		date '1998, 12, 15', 'rama@gmail.com'
+),('Herlanda', 'Tarang', 'MALE',
+		date '1999, 06, 17', 'tarang@gmail.com'
+)
+
+INSERT INTO person (
+	first_name, last_name, gender, date_of_birth,
+	email
+)
+VALUES (
+	'Denis', 'Arya', 'MALE', date '1996, 04, 02',
+	'denis@gmail.com'
+)
+
+-- menampilkan isi data dari table person
+SELECT * FROM person
+SELECT first_name, city
+FROM person
+
+-- merubah isi data yang sudah ada
+UPDATE person
+SET city = 'Cianjur'
+WHERE first_name = 'Yhudi'
+
+UPDATE person
+SET city = 'Tangerang'
+WHERE id = 6
+
+DELETE FROM person WHERE first_name = 'Denis'
+DELETE FROM person WHERE id = 1
+
+-- ALTER TABLE
+-- ALTER TABLE-ADD COLUMN
+ALTER TABLE person
+ADD city VARCHAR(50)
+
+SELECT * FROM person
+SELECT first_name, last_name FROM person
+
+-- pengurutan isi data
+-- untuk mengurutkan isi data berdasarkan alphabet yang
+-- dimulai dari yang terkecil ataupun yang terbesar
+SELECT *
+FROM person
+ORDER BY first_name
+
+SELECT *
+FROM person
+ORDER BY first_name DESC
+
+-- untuk menghilangkan duplikat
+SELECT DISTINCT gender
+FROM person
+
+-- WHERE CLAUSE
+SELECT *
+FROM person
+WHERE gender = 'MALE'
+ORDER BY id
+
+-- Menggunakan Operator
+SELECT *
+FROM person
+WHERE id <= 6
+
+SELECT *
+FROM person
+WHERE gender = 'MALE'
+AND city = 'Jakarta'
+OR city = 'Tangerang'
+
+SELECT *
+FROM person
+WHERE city IN ('Jakarta', 'Tangerang')
+AND gender = 'MALE'
+ORDER BY first_name
+
+-- LIMIT, OFFSET
+SELECT *
+FROM person
+ORDER BY id
+LIMIT 2
+
+SELECT *
+FROM person
+ORDER BY id
+OFFSET 3
+
+SELECT *
+FROM person
+WHERE score >= 0
+ORDER BY score DESC
+LIMIT 3
+
+SELECT *
+FROM person
+WHERE score >= 0
+ORDER BY score DESC
+OFFSET 3
+
+ALTER TABLE person
+ADD score INT
+
+-- BETWEEN / Di - antara
+SELECT *
+FROM person
+WHERE date_of_birth
+BETWEEN date '1997-01-01'
+AND '2000-12-31'
+
+-- LIKE
+--mencari nama yang berawal dari huruf a
+SELECT *
+FROM person
+WHERE first_name LIKE 'A%'
+
+SELECT *
+FROM person
+WHERE first_name LIKE '%a'
+
+SELECT *
+FROM person
+WHERE first_name LIKE '%am%'
+
+SELECT *
+FROM person
+WHERE email LIKE '%@gmail%'
+
+SELECT *
+FROM person
+WHERE first_name LIKE '_a%'
+
+SELECT *
+FROM person
+WHERE score > 50
+
+--GROUP BY
+--GROUP BY memungkinkan kita menggunakan fungsi agregate seperti AVG, MAX,
+-- MIN, SUM dan COUNT
+-- Disisi Lain DISTINCT Hanya menghapus duplikat
+-- AS adalah alias
+SELECT city, COUNT(city) AS "jumlah_orang_di_masing_kota"
+FROM person
+GROUP BY city
+ORDER BY COUNT(city) DESC
+
+-- WHERE hanya bisa digunakan ketika data sudah ada didalam field
+-- WHERE hanya memfilter dari sisi isi dalam table saja, sedangkan HAVING
+-- memfilter dari sisi hasil query
+
+-- subqueries
+SELECT city, COUNT(city) AS "jumlah_orang"
+FROM person
+GROUP BY city
+HAVING COUNT(city) = (SELECT MAX(jmlh_orang) AS "max_jmlh_org" 
+					   FROM (SELECT COUNT(city) AS "jmlh_orang"
+							FROM person GROUP BY city
+							)AS "max_jumlah_penduduk")
+
+SELECT city, COUNT(city) AS "jmlh_orang"
+FROM person
+GROUP BY city
+ORDER BY city DESC
+LIMIT 1
+
+SELECT city, COUNT(city) AS "jmlh_orang"
+FROM person
+GROUP BY city
+HAVING COUNT(city) > 1
+
+-- BASIC Arithmetic Operator
+-- penjumlahan
+SELECT 10 + 2 AS "plus"
+-- pengurangan
+SELECT 10 - 2 AS "minus"
+-- perkalian
+SELECT 10 * 2 AS "mutiple"
+
+CREATE TABLE car (
+	id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+	merk VARCHAR(50) NOT NULL,
+	model VARCHAR(50) NOT NULL,
+	plate VARCHAR(15) NOT NULL,
+	price NUMERIC(10, 2) NOT NULL
+)
+
+INSERT INTO car (
+	merk, model, plate, price
+)
+VALUES (
+	'Tesla', 'Model S', 'F 123 YUD', 20000.00
+), (
+	'Toyota', 'Kijang', 'B 290 CBU', 10000.00
+), (
+	'Toyota', 'Alphard', 'B 20 BUF', 15000.00
+), (
+	'Ferari', 'F8', 'AD 1 IBE', 40000.00
+), (
+	'Honda', 'Jazz', 'B 547 RIA', 15000.00
+), (
+	'Nissan', 'GT-R', 'D 317 NIS', 35000.00
+), (
+	'Toyota', 'Fortuner', 'B 789 HER', 45000.00
+), (
+	'MiniCooper', 'R61', 'T 4 LIT', 45000.00
+), (
+	'Rubicon', 'Wrangler', 'T 4 RIQ', 55000.00
+)
+
+SELECT * FROM person
+SELECT * FROM car
+
+ALTER TABLE person
+ADD car_id INT
+
+ALTER TABLE car
+DROP COLUMN car_id
+
+--JOIN TABLE
+SELECT p.first_name, p.last_name, c.merk, c.model, c.plate
+FROM person p
+JOIN car c
+ON p.car_id = c.id
+ORDER BY first_name
